@@ -1,0 +1,55 @@
+version: '3'
+services:
+  api:
+    command: sh -c "./entrypoint.sh && bin/rails s -b 0.0.0.0 -p 3001"
+    container_name: app-api
+    volumes:
+      - ./:/app
+    build:
+      context: ./
+      dockerfile: api.dev.Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      AUTH0_CLIENT_ID: TjgOkTyYuRpJVBHpCErhehLlrcX2T96B
+      AUTH0_CLIENT_SECRET: LXQBVmPfuqs8kykmbTIHIKi5WuddBSeQoanqgbkSYYP3T3fsfdlIMxvIOK4F1YgL
+      AUTH0_DOMAIN: dev-zf3fhtyayvg60dpw.us.auth0.com
+      POSTGRES_PASSWORD: app_password
+      POSTGRES_USER: app_user
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: db
+    depends_on:
+      - db
+
+  client:
+    container_name: app-client
+    build:
+      context: .
+      dockerfile: client.dev.Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - client_node_modules:/app/client/node_modules
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: app_db
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  pg_data:
+  client_node_modules:

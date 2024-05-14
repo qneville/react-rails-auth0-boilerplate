@@ -3,14 +3,17 @@
 connection: &connection
   adapter: postgresql
   encoding: unicode
-  pool: 5
-  username: <PG_USERNAME>
-  password: <PG_PASSWORD>
-  timeout: 5000
+  # For Rails 7 and newer:
+  username: <%= ENV['POSTGRES_USER'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
+  host: <%= ENV['POSTGRES_HOST'] %>
+  port: <%= ENV['POSTGRES_PORT'] %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
 
 development:
   <<: *connection
-  database: rails_development
+  database: app_db
 
 test:
   <<: *connection

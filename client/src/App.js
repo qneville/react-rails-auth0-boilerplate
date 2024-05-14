@@ -11,7 +11,7 @@ class App extends Component {
   }
 
   fetchData = () => {
-    axios.get('/api/data') // You can simply make your requests to "/api/whatever you want"
+    axios.get('http://localhost:3001/api/data') // You can simply make your requests to "/api/whatever you want"
     .then((response) => {
       // handle success
       console.log(response.data) // The entire response from the Rails API
@@ -26,10 +26,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1>{ this.state.message }</h1>
-        <button onClick={this.fetchData} >
-          Fetch Data
-        </button>        
+        <Navbar/>
+        
+        <Footer/>
       </div>
     );
   }
